@@ -67,4 +67,11 @@ public class OrderItemResource {
         service.delete(id);
         return Response.noContent().build();
     }
+
+    @DELETE
+    @Path("/order/{orderId}")
+    public Response deleteByOrderId(@PathParam("orderId") UUID orderId) {
+        service.deleteByOrderId(orderId);
+        return Response.noContent().build();
+    }
 }

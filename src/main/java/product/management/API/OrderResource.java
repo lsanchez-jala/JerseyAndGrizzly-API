@@ -10,7 +10,6 @@ import product.management.Application.OrderService;
 import product.management.Domain.DTO.Order.OrderDTO;
 import product.management.Domain.DTO.Order.OrderCreateRequest;
 import product.management.Domain.DTO.Order.OrderStatusRequest;
-import product.management.Domain.Enums.OrderStatus;
 
 import java.net.URI;
 import java.util.UUID;
@@ -44,6 +43,12 @@ public class OrderResource {
         return Response.ok(service.findByCustomerId(customerId)).build();
     }
 
+    @GET
+    @Path("shipment/{shipmentId}")
+    public Response listByShipment(@PathParam("shipmentId") UUID shipmentId) {
+        return Response.ok(service.findByShipmentId(shipmentId)).build();
+    }
+
     @POST
     public Response create(OrderCreateRequest request, @Context UriInfo uriInfo) {
         OrderDTO created = service.save(request);
@@ -51,7 +56,7 @@ public class OrderResource {
         return Response.created(location).entity(created).build();
     }
 
-    @PUT
+    @PATCH
     @Path("{id}")
     public Response update(@PathParam("id") UUID id, OrderCreateRequest request) {
         return Response.ok(service.save(id, request)).build();

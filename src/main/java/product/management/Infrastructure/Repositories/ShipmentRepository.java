@@ -71,25 +71,6 @@ public class ShipmentRepository {
         return null;
     }
 
-    public Shipment findByOrderId(UUID orderId) {
-        String sql = "SELECT * FROM shipment WHERE order_id = ?";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setObject(1, orderId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapRow(rs);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to retrieve shipment by order id", e);
-        }
-        return null;
-    }
-
     public Shipment findByTrackingCode(String trackingCode) {
         String sql = "SELECT * FROM shipment WHERE tracking_code = ?";
 

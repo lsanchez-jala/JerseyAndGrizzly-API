@@ -37,12 +37,6 @@ public class ShipmentResource {
     }
 
     @GET
-    @Path("order/{orderId}")
-    public Response getByOrderId(@PathParam("orderId") UUID orderId) {
-        return Response.ok(service.findByOrderId(orderId)).build();
-    }
-
-    @GET
     @Path("tracking/{trackingCode}")
     public Response getByTrackingCode(@PathParam("trackingCode") String trackingCode) {
         return Response.ok(service.findByTrackingCode(trackingCode)).build();

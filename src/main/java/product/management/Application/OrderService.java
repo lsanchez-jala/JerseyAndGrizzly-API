@@ -55,6 +55,12 @@ public class OrderService {
                 .toList();
     }
 
+    public List<OrderDTO> findByShipmentId(UUID shipmentId) {
+        return repository.findByShipmentId(shipmentId).stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
     public void delete(UUID id) {
         findById(id);
         repository.delete(id);

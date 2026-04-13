@@ -25,6 +25,7 @@ public class OrderRepository {
         Order order = new Order();
         order.setId(rs.getObject("id", UUID.class));
         order.setCustomerId(rs.getObject("customer_id", UUID.class));
+        order.setShipmentId(rs.getObject("shipment_id", UUID.class));
         order.setStatus(OrderStatus.valueOf(rs.getString("status")));
         order.setTotalAmount(rs.getFloat("total_amount"));
         order.setCreatedAt(rs.getTimestamp("created_at").toInstant());
@@ -33,7 +34,15 @@ public class OrderRepository {
     }
 
     public List<Order> findAll() {
-        String sql = "SELECT * FROM orders";
+        String sql = """
+                SELECT
+                    o.*,
+                    SUM(oi.unit_price * oi.quantity) AS total_amount
+                FROM orders o
+                LEFT JOIN order_item oi
+                    ON oi.order_id = o.id
+                GROUP BY o.id;
+            """;
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -51,7 +60,16 @@ public class OrderRepository {
     }
 
     public Order findById(UUID id) {
-        String sql = "SELECT * FROM orders WHERE id = ?";
+        String sql = """
+            SELECT
+                o.*,
+                SUM(oi.unit_price * oi.quantity) AS total_amount
+            FROM orders o
+            LEFT JOIN order_item oi
+                ON oi.order_id = o.id
+            WHERE o.id = ?
+            GROUP BY o.id;
+            """;
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -89,6 +107,26 @@ public class OrderRepository {
         }
     }
 
+    public List<Order> findByShipmentId(UUID shipmentId) {
+        String sql = "SELECT * FROM orders WHERE shipment_id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setObject(1, shipmentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Order> orders = new ArrayList<>();
+                while (rs.next()) {
+                    orders.add(mapRow(rs));
+                }
+                return orders;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve orders for shipment", e);
+        }
+    }
+
     public Order save(Order request) {
         String sql = """
                 INSERT INTO orders (customer_id, status, created_at, updated_at)
@@ -117,7 +155,7 @@ public class OrderRepository {
         String sql = """
                 UPDATE orders
                 SET customer_id  = ?,
-                    total_amount = ?,
+                    shipment_id = ?,
                     updated_at   = now()
                 WHERE id = ?
                 RETURNING *
@@ -127,7 +165,7 @@ public class OrderRepository {
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setObject(1, request.getCustomerId());
-            ps.setFloat(2, request.getTotalAmount());
+            ps.setObject(2, request.getShipmentId());
             ps.setObject(3, id);
 
             try (ResultSet rs = ps.executeQuery()) {

@@ -2,9 +2,11 @@ package product.management.Application;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.OrderItem.OrderItemDTO;
 import product.management.Domain.DTO.OrderItem.OrderItemRequest;
+import product.management.Domain.Models.OrderItem;
 import product.management.Infrastructure.Mappers.OrderItemMapper;
 import product.management.Infrastructure.Repositories.OrderItemRepository;
 
@@ -34,11 +36,11 @@ public class OrderItemService {
     }
 
     public OrderItemDTO findById(UUID id) {
-        OrderItemDTO orderItem = mapper.toDto(repository.findById(id));
+        OrderItem orderItem = repository.findById(id);
         if (orderItem == null) {
-            throw new ElementNotFoundException("OrderItem with id: " + id + ": doesn't exist.");
+            throw new ElementNotFoundException("OrderItem with id: " + id + " was NOT FOUND.");
         }
-        return orderItem;
+        return mapper.toDto(orderItem);
     }
 
     public List<OrderItemDTO> findByOrderId(UUID orderId) {
@@ -63,15 +65,15 @@ public class OrderItemService {
     }
 
     public OrderItemDTO save(OrderItemRequest request) {
-        if (productService.findById(request.productId()) == null) {
-            throw new ElementNotFoundException("Product with id: " + request.productId() + ": doesn't exist.");
-        }
-        if (orderService.findById(request.orderId()) == null) {
-            throw new ElementNotFoundException("Order with id: " + request.orderId() + ": doesn't exist.");
-        }
         if (request == null) {
             throw new IllegalArgumentException("The request must not be empty");
         }
+        if (request.productId() == null || request.orderId() == null) {
+            throw new BadRequestException("Order and product id can't be null.");
+        }
+        productService.findById(request.productId());
+        orderService.findById(request.orderId());
+
         return mapper.toDto(repository.save(request));
     }
 

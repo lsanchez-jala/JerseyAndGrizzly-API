@@ -48,14 +48,6 @@ public class ShipmentService {
         return mapper.toDto(shipment);
     }
 
-    public ShipmentDTO findByOrderId(UUID orderId) {
-        Shipment shipment = repository.findByOrderId(orderId);
-        if (shipment == null) {
-            throw new ElementNotFoundException("Shipment for order id: " + orderId + ": was NOT FOUND.");
-        }
-        return mapper.toDto(shipment);
-    }
-
     public ShipmentDTO findByTrackingCode(String trackingCode) {
         Shipment shipment = repository.findByTrackingCode(trackingCode);
         if (shipment == null) {

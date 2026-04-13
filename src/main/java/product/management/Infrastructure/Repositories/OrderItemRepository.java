@@ -19,26 +19,6 @@ public class OrderItemRepository {
     @Inject
     public OrderItemRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-//        ensureTable();
-    }
-
-    private void ensureTable() {
-        String sql = """
-                CREATE TABLE IF NOT EXISTS order_item (
-                    id          UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-                    order_id    UUID            NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-                    product_id  UUID            NOT NULL REFERENCES product(id) ON DELETE RESTRICT,
-                    quantity    INT             NOT NULL CHECK (quantity > 0),
-                    unit_price  NUMERIC(12, 2)  NOT NULL CHECK (unit_price >= 0)
-                );
-                """;
-
-        try (Connection connection = dataSource.getConnection()) {
-            Statement st = connection.createStatement();
-            st.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to ensure order_item table", e);
-        }
     }
 
     private OrderItem mapRow(ResultSet rs) throws SQLException {

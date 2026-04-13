@@ -53,7 +53,6 @@ public class DatabaseMigrationManager {
                     customer_id     UUID,
                     shipment_id     UUID,
                     status          VARCHAR(50)                 NOT NULL,
-                    total_amount    NUMERIC(12, 2),
                     created_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now(),
                     updated_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now()
                 );
@@ -97,8 +96,6 @@ public class DatabaseMigrationManager {
                 "ALTER TABLE orders ADD CONSTRAINT fk_orders_shipment FOREIGN KEY (shipment_id) REFERENCES shipment(id)");
         applyConstraintIfNotExists("fk_orders_customer", "orders",
                 "ALTER TABLE orders ADD CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES customer(id)");
-        applyConstraintIfNotExists("chk_orders_total", "orders",
-                "ALTER TABLE orders ADD CONSTRAINT chk_orders_total CHECK (total_amount >= 0)");
 
         // order_item
         applyConstraintIfNotExists("fk_order_item_order", "order_item",
