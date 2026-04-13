@@ -1,7 +1,9 @@
 package product.management.Application.exception;
 
 import jakarta.ws.rs.core.Response;
+import lombok.Getter;
 
+@Getter
 public class GenericException extends RuntimeException {
     private final Response.Status status;
 
@@ -10,7 +12,4 @@ public class GenericException extends RuntimeException {
         this.status = status;
     }
 
-    public Response.Status getStatus() {
-        return status;
-    }
 }

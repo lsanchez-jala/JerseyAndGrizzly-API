@@ -10,8 +10,6 @@ public class ErrorResponse {
     private String message;
     private String path;
 
-    public ErrorResponse() {}
-
     public ErrorResponse(int status, String message, String path) {
         this.status = status; this.message = message; this.path = path;
     }

@@ -19,27 +19,6 @@ public class ProductRepository {
     @Inject
     public ProductRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-//        ensureTable();
-    }
-
-    private void ensureTable() {
-        String sql = """
-                CREATE TABLE IF NOT EXISTS product (
-                    id            UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-                    name          VARCHAR(255)    NOT NULL,
-                    sku           VARCHAR(100)    NOT NULL UNIQUE,
-                    price         NUMERIC(12, 2)  NOT NULL CHECK (price >= 0),
-                    stock         INT             NOT NULL DEFAULT 0 CHECK (stock >= 0),
-                    category      VARCHAR(100)
-                );
-                """;
-
-        try (Connection connection = dataSource.getConnection()) {
-            Statement st = connection.createStatement();
-            st.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to ensure users table", e);
-        }
     }
 
     private Product mapRow(ResultSet rs) throws SQLException {

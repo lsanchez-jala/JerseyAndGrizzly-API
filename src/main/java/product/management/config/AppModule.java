@@ -9,7 +9,6 @@ import jakarta.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.mapstruct.factory.Mappers;
 import product.management.Infrastructure.Mappers.*;
 import product.management.Infrastructure.Repositories.*;
 import product.management.MyApplication;
@@ -32,7 +31,7 @@ public class AppModule {
     public URI baseUri(
             @Named("applicationPort") @Nonnull final Integer applicationPort) {
         return UriBuilder.fromUri("http://0.0.0.0/").port(applicationPort).build();
-    };
+    }
 
     @Provides
     @Singleton
