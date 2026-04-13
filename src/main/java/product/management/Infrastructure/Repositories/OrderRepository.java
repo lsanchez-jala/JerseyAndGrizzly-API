@@ -2,7 +2,6 @@ package product.management.Infrastructure.Repositories;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import product.management.Domain.DTO.Order.OrderRequest;
 import product.management.Domain.Enums.OrderStatus;
 import product.management.Domain.Models.Order;
 
@@ -113,8 +112,8 @@ public class OrderRepository {
 
     public Order save(Order request) {
         String sql = """
-                INSERT INTO orders (customer_id, status, total_amount, created_at, updated_at)
-                VALUES (?, ?, ?, now(), now())
+                INSERT INTO orders (customer_id, status, created_at, updated_at)
+                VALUES (?, ?, now(), now())
                 RETURNING *
                 """;
 
@@ -123,7 +122,6 @@ public class OrderRepository {
 
             ps.setObject(1, request.getCustomerId());
             ps.setString(2, request.getStatus().name());
-            ps.setFloat(3, request.getTotalAmount());
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

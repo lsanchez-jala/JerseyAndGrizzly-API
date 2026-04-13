@@ -8,7 +8,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import product.management.Application.OrderService;
 import product.management.Domain.DTO.Order.OrderDTO;
-import product.management.Domain.DTO.Order.OrderRequest;
+import product.management.Domain.DTO.Order.OrderCreateRequest;
+import product.management.Domain.DTO.Order.OrderStatusRequest;
+import product.management.Domain.Enums.OrderStatus;
 
 import java.net.URI;
 import java.util.UUID;
@@ -43,7 +45,7 @@ public class OrderResource {
     }
 
     @POST
-    public Response create(OrderRequest request, @Context UriInfo uriInfo) {
+    public Response create(OrderCreateRequest request, @Context UriInfo uriInfo) {
         OrderDTO created = service.save(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
         return Response.created(location).entity(created).build();
@@ -51,7 +53,7 @@ public class OrderResource {
 
     @PUT
     @Path("{id}")
-    public Response update(@PathParam("id") UUID id, OrderRequest request) {
+    public Response update(@PathParam("id") UUID id, OrderCreateRequest request) {
         return Response.ok(service.save(id, request)).build();
     }
 
@@ -62,9 +64,9 @@ public class OrderResource {
         return Response.noContent().build();
     }
 
-    @POST
+    @PATCH
     @Path("{id}/status")
-    public Response changeStatus(@PathParam("id") UUID id, OrderRequest request, @Context UriInfo uriInfo) {
+    public Response changeStatus(@PathParam("id") UUID id, OrderStatusRequest request, @Context UriInfo uriInfo) {
         OrderDTO created = service.changeStatus(id, request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
         return Response.created(location).entity(created).build();

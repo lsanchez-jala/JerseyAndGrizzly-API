@@ -2,7 +2,8 @@ package product.management.Infrastructure.Mappers;
 
 import jakarta.inject.Singleton;
 import product.management.Domain.DTO.Order.OrderDTO;
-import product.management.Domain.DTO.Order.OrderRequest;
+import product.management.Domain.DTO.Order.OrderCreateRequest;
+import product.management.Domain.Enums.OrderStatus;
 import product.management.Domain.Models.Order;
 
 @Singleton
@@ -22,10 +23,8 @@ public class OrderMapper {
         );
     }
 
-    public void toEntity(OrderRequest request, Order entity) {
+    public void toEntity(OrderCreateRequest request, Order entity) {
         if (request.customerId() != null)   entity.setCustomerId(request.customerId());
         if (request.shipmentId() != null)   entity.setShipmentId(request.shipmentId());
-        if (request.status() != null)       entity.setStatus(request.status());
-        if (request.totalAmount() != null)  entity.setTotalAmount(request.totalAmount());
     }
 }
