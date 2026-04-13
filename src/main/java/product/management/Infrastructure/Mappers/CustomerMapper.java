@@ -1,14 +1,29 @@
 package product.management.Infrastructure.Mappers;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import jakarta.inject.Singleton;
 import product.management.Domain.DTO.Customer.CustomerDTO;
 import product.management.Domain.DTO.Customer.CustomerRequest;
 import product.management.Domain.Models.Customer;
 
-@Mapper( nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface CustomerMapper {
-    CustomerDTO toDto(Customer entity);
-    void toEntity(CustomerRequest request, @MappingTarget Customer entity);
+@Singleton
+public class CustomerMapper {
+
+    public CustomerDTO toDto(Customer entity) {
+        return new CustomerDTO(
+                entity.getId(),
+                entity.getFirstName(),
+                entity.getLastName(),
+                entity.getEmail(),
+                entity.getCreatedAt().toString(),
+                entity.getUpdatedAt() != null
+                        ? entity.getUpdatedAt().toString()
+                        : null
+        );
+    }
+
+    public void toEntity(CustomerRequest request, Customer entity) {
+        if (request.firstName() != null) entity.setFirstName(request.firstName());
+        if (request.lastName() != null)  entity.setLastName(request.lastName());
+        if (request.email() != null)     entity.setEmail(request.email());
+    }
 }

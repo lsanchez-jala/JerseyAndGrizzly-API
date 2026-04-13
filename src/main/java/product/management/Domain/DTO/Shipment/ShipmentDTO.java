@@ -1,6 +1,5 @@
 package product.management.Domain.DTO.Shipment;
 
-import java.time.Instant;
 import java.util.UUID;
 
 public record ShipmentDTO(

@@ -17,10 +17,8 @@ public class Order{
 
     private UUID id;
     @NotNull
-    @NotBlank
     private UUID customerId;
     @NotNull
-    @NotBlank
     private UUID shipmentId;
     @NotNull
     private OrderStatus status;
@@ -28,7 +26,7 @@ public class Order{
     private Float totalAmount;
     @NotNull
     private Instant createdAt;
-    @NotBlank
+    @NotNull
     private Instant updatedAt;
 
 }
