@@ -2,7 +2,6 @@ package product.management.Infrastructure.Migrations;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.validation.Constraint;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -54,7 +53,7 @@ public class DatabaseMigrationManager {
                     customer_id     UUID,
                     shipment_id     UUID,
                     status          VARCHAR(50)                 NOT NULL,
-                    total_amount    NUMERIC(12, 2)              NOT NULL,
+                    total_amount    NUMERIC(12, 2),
                     created_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now(),
                     updated_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now()
                 );

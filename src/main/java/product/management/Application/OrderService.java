@@ -12,7 +12,6 @@ import product.management.Domain.Models.Order;
 import product.management.Infrastructure.Mappers.OrderMapper;
 import product.management.Infrastructure.Repositories.OrderRepository;
 
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -73,12 +72,10 @@ public class OrderService {
         if (request != null ){
             mapper.toEntity(request, newOrder);
         }
-        newOrder.setCreatedAt(Instant.now());
-        newOrder.setUpdatedAt(Instant.now());
         newOrder.setStatus(OrderStatus.CREATED);
-        var result = repository.save(newOrder);
+        Order result = repository.save(newOrder);
         kafkaService.send(result.getId().toString(), result.toString());
-        return mapper.toDto(repository.save(newOrder));
+        return mapper.toDto(result);
     }
 
     public OrderDTO save(UUID id, OrderCreateRequest request) {

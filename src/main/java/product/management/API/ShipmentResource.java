@@ -55,7 +55,7 @@ public class ShipmentResource {
         return Response.created(location).entity(created).build();
     }
 
-    @PUT
+    @PATCH
     @Path("{id}")
     public Response update(@PathParam("id") UUID id, ShipmentRequest request) {
         return Response.ok(service.save(id, request)).build();
@@ -66,5 +66,13 @@ public class ShipmentResource {
     public Response delete(@PathParam("id") UUID id) {
         service.delete(id);
         return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("{id}/status")
+    public Response changeStatus(@PathParam("id") UUID id, ShipmentRequest request, @Context UriInfo uriInfo) {
+        ShipmentDTO created = service.changeStatus(id, request);
+        URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
+        return Response.created(location).entity(created).build();
     }
 }

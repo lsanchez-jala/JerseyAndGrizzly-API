@@ -19,27 +19,6 @@ public class OrderRepository {
     @Inject
     public OrderRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-//        ensureTable();
-    }
-
-    private void ensureTable() {
-        String sql = """
-                CREATE TABLE IF NOT EXISTS orders (
-                    id              UUID                        PRIMARY KEY DEFAULT gen_random_uuid(),
-                    customer_id     UUID                        NULL REFERENCES customer(id),
-                    status          VARCHAR(50)                 NOT NULL,
-                    total_amount    NUMERIC(12, 2)              NOT NULL CHECK (total_amount >= 0),
-                    created_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now(),
-                    updated_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now()
-                );
-                """;
-
-        try (Connection connection = dataSource.getConnection()) {
-            Statement st = connection.createStatement();
-            st.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to ensure orders table", e);
-        }
     }
 
     private Order mapRow(ResultSet rs) throws SQLException {
@@ -198,10 +177,10 @@ public class OrderRepository {
                 if (rs.next()) {
                     return mapRow(rs);
                 }
-                throw new RuntimeException("No order found with id: " + orderId);
+                throw new RuntimeException("No shipment found with id: " + orderId);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update order", e);
+            throw new RuntimeException("Failed to update shipment", e);
         }
     }
 }

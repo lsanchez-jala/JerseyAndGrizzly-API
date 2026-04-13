@@ -3,7 +3,7 @@ package product.management.Infrastructure.Repositories;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import product.management.Domain.DTO.Shipment.ShipmentRequest;
+import product.management.Domain.Enums.ShipmentStatus;
 import product.management.Domain.Models.Shipment;
 
 import javax.sql.DataSource;
@@ -20,37 +20,15 @@ public class ShipmentRepository {
     @Inject
     public ShipmentRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-//        ensureTable();
     }
 
-    private void ensureTable() {
-        String sql = """
-                CREATE TABLE IF NOT EXISTS shipment (
-                    id              UUID                        PRIMARY KEY DEFAULT gen_random_uuid(),
-                    order_id        UUID                        NOT NULL REFERENCES orders(id) ON DELETE CASCADE UNIQUE,
-                    tracking_code   VARCHAR(255)                NOT NULL UNIQUE,
-                    carrier         VARCHAR(255)                NOT NULL,
-                    status          VARCHAR(100)                NOT NULL,
-                    created_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now(),
-                    updated_at      TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now()
-                );
-                """;
-
-        try (Connection connection = dataSource.getConnection()) {
-            Statement st = connection.createStatement();
-            st.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to ensure shipment table", e);
-        }
-    }
 
     private Shipment mapRow(ResultSet rs) throws SQLException {
         Shipment shipment = new Shipment();
         shipment.setId(rs.getObject("id", UUID.class));
-        shipment.setOrderId(rs.getObject("order_id", UUID.class));
         shipment.setTrackingCode(rs.getString("tracking_code"));
         shipment.setCarrier(rs.getString("carrier"));
-        shipment.setStatus(rs.getString("status"));
+        shipment.setStatus(ShipmentStatus.valueOf(rs.getString("status")));
         shipment.setCreatedAt(rs.getTimestamp("created_at").toInstant());
         shipment.setUpdatedAt(rs.getTimestamp("updated_at").toInstant());
         return shipment;
@@ -131,20 +109,19 @@ public class ShipmentRepository {
         return null;
     }
 
-    public Shipment save(ShipmentRequest request) {
+    public Shipment save(Shipment request) {
         String sql = """
-                INSERT INTO shipment (order_id, tracking_code, carrier, status)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO shipment (tracking_code, carrier, status, created_at, updated_at)
+                VALUES ( ?, ?, ?, now(), now())
                 RETURNING *
                 """;
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setObject(1, request.orderId());
-            ps.setString(2, request.trackingCode());
-            ps.setString(3, request.carrier());
-            ps.setString(4, request.status());
+            ps.setString(1, request.getTrackingCode());
+            ps.setString(2, request.getCarrier());
+            ps.setString(3, request.getStatus().name());
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -157,13 +134,10 @@ public class ShipmentRepository {
         return null;
     }
 
-    public Shipment save(UUID id, ShipmentRequest request) {
+    public Shipment save(UUID id, Shipment request) {
         String sql = """
                 UPDATE shipment
-                SET order_id      = ?,
-                    tracking_code = ?,
-                    carrier       = ?,
-                    status        = ?,
+                SET carrier       = ?,
                     updated_at    = now()
                 WHERE id = ?
                 RETURNING *
@@ -172,17 +146,40 @@ public class ShipmentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setObject(1, request.orderId());
-            ps.setString(2, request.trackingCode());
-            ps.setString(3, request.carrier());
-            ps.setString(4, request.status());
-            ps.setObject(5, id);
+            ps.setString(1, request.getCarrier());
+            ps.setObject(2, id);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);
                 }
                 throw new RuntimeException("No shipment found with id: " + id);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update shipment", e);
+        }
+    }
+
+    public Shipment updateStatus(UUID shipmentId, ShipmentStatus newStatus){
+        String sql = """
+                UPDATE shipment
+                SET status       = ?,
+                    updated_at   = now()
+                WHERE id = ?
+                RETURNING *
+                """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, newStatus.name());
+            ps.setObject(2, shipmentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+                throw new RuntimeException("No shipment found with id: " + shipmentId);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update shipment", e);

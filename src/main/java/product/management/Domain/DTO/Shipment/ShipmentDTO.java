@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public record ShipmentDTO(
         UUID id,
-        UUID orderId,
         String trackingCode,
         String carrier,
         String status,

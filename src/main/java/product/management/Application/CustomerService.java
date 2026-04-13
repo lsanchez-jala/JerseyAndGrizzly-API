@@ -5,6 +5,7 @@ import jakarta.inject.Singleton;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.Customer.CustomerDTO;
 import product.management.Domain.DTO.Customer.CustomerRequest;
+import product.management.Domain.Models.Customer;
 import product.management.Infrastructure.Mappers.CustomerMapper;
 import product.management.Infrastructure.Repositories.CustomerRepository;
 
@@ -30,19 +31,19 @@ public class CustomerService {
     }
 
     public CustomerDTO findById(UUID id) {
-        CustomerDTO customer = mapper.toDto(repository.findById(id));
+        Customer customer = repository.findById(id);
         if (customer == null) {
-            throw new ElementNotFoundException("Customer with id: " + id + ": doesn't exist.");
+            throw new ElementNotFoundException("Customer with id: " + id + " was NOT FOUND.");
         }
-        return customer;
+        return mapper.toDto(customer);
     }
 
     public CustomerDTO findByEmail(String email) {
-        CustomerDTO customer = mapper.toDto(repository.findByEmail(email));
+        Customer customer = repository.findByEmail(email);
         if (customer == null) {
-            throw new ElementNotFoundException("Customer with email: " + email + ": doesn't exist.");
+            throw new ElementNotFoundException("Customer with email: " + email + " was NOT FOUND.");
         }
-        return customer;
+        return mapper.toDto(customer);
     }
 
     public void delete(UUID id) {

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import product.management.Domain.Enums.ShipmentStatus;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -15,13 +16,11 @@ import java.util.UUID;
 public class Shipment {
     private UUID id;
     @NotNull
-    private UUID orderId;
-    @NotNull
     private String trackingCode;
     @NotNull
     private String carrier;
     @NotNull
-    private String status;
+    private ShipmentStatus status;
     @NotNull
     private Instant createdAt;
     @NotBlank
