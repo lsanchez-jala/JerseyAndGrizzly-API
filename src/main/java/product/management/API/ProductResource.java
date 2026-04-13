@@ -43,7 +43,7 @@ public class ProductResource {
         return Response.created(location).entity(created).build();
     }
 
-    @PUT
+    @PATCH
     @Path("{id}")
     public Response update(@PathParam("id") UUID id, ProductRequest request) {
         return Response.ok(service.save(id, request)).build();

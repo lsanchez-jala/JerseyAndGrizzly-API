@@ -70,7 +70,7 @@ public class AppModule {
     @Provides
     @Singleton
     public CustomerMapper provideCustomerMapper() {
-        return Mappers.getMapper(CustomerMapper.class);
+        return new CustomerMapper();
     }
 
     // Product
@@ -83,7 +83,7 @@ public class AppModule {
     @Provides
     @Singleton
     public ProductMapper provideProductMapper() {
-        return Mappers.getMapper(ProductMapper.class); // MapStruct's registry
+        return new ProductMapper(); // MapStruct's registry
     }
 
     // Order
@@ -96,7 +96,7 @@ public class AppModule {
     @Provides
     @Singleton
     public OrderMapper provideOrderMapper() {
-        return Mappers.getMapper(OrderMapper.class); // MapStruct's registry
+        return new OrderMapper(); // MapStruct's registry
     }
 
     // OrderItem
@@ -109,7 +109,7 @@ public class AppModule {
     @Provides
     @Singleton
     public OrderItemMapper provideOrderItemMapper() {
-        return Mappers.getMapper(OrderItemMapper.class);
+        return new OrderItemMapper();
     }
 
     // Shipment
@@ -122,7 +122,7 @@ public class AppModule {
     @Provides
     @Singleton
     public ShipmentMapper provideShipmentMapper() {
-        return Mappers.getMapper(ShipmentMapper.class);
+        return new ShipmentMapper();
     }
 
     // -------------------------------------------------------------------------

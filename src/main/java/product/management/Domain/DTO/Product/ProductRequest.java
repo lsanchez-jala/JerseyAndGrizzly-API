@@ -4,7 +4,7 @@ public record ProductRequest(
         String name,
         String sku,
         Float price,
-        int stock,
+        Integer stock,
         String category
 ) {
 }

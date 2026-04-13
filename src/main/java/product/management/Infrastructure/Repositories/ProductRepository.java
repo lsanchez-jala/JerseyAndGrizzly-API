@@ -68,7 +68,7 @@ public class ProductRepository {
             return products;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to retrieve products", e);
+            throw new RuntimeException("Failed to retrieve all products", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class ProductRepository {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql);
 
-            ps.setString(1, id.toString());
+            ps.setObject(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -87,7 +87,27 @@ public class ProductRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to create the user", e);
+            throw new RuntimeException("Failed to retrieve a product", e);
+        }
+        return null;
+    }
+
+    public Product findBySku(String sku) {
+        String sql = """
+                SELECT * FROM product WHERE sku = ?
+                """;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setString(1, sku);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve a product", e);
         }
         return null;
     }
@@ -136,7 +156,7 @@ public class ProductRepository {
         }
     }
 
-    public Product save(UUID id, ProductRequest request) {
+    public Product save(UUID id, Product request) {
         String sql = """
             UPDATE product
             SET name = ?, sku = ?, price = ?, stock = ?, category = ?
@@ -147,11 +167,11 @@ public class ProductRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, request.name());
-            ps.setString(2, request.sku());
-            ps.setFloat(3, request.price());
-            ps.setInt(4, request.stock());
-            ps.setString(5, request.category());
+            ps.setString(1, request.getName());
+            ps.setString(2, request.getSku());
+            ps.setFloat(3, request.getPrice());
+            ps.setInt(4, request.getStock());
+            ps.setString(5, request.getCategory());
             ps.setObject(6, id);
 
             try (ResultSet rs = ps.executeQuery()) {
