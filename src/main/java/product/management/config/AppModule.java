@@ -14,7 +14,10 @@ import product.management.Infrastructure.Repositories.*;
 import product.management.MyApplication;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Properties;
 
 @Module
 public class AppModule {
@@ -50,10 +53,23 @@ public class AppModule {
 
     @Provides
     @Singleton
-    DataSource provideDataSource() {
-        return DataSourceProvider.create();
+    public Properties provideProperties() {
+        Properties props = new Properties();
+        try (InputStream is = getClass().getClassLoader()
+                .getResourceAsStream("application.properties")) {
+            if (is == null) throw new RuntimeException("application.properties not found");
+            props.load(is);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load application.properties", e);
+        }
+        return props;
     }
 
+    @Provides
+    @Singleton
+    DataSource provideDataSource(Properties props) {
+        return DataSourceProvider.create(props);
+    }
 
     // -------------------------------------------------------------------------
     // Repositories & Mappers

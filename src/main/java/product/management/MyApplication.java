@@ -9,6 +9,8 @@ import org.glassfish.jersey.server.ServerProperties;
 import product.management.API.*;
 import product.management.Application.exception.AppExceptionMapper;
 
+import java.util.Properties;
+
 @Singleton
 @ApplicationPath("/api/v1")
 public class MyApplication extends ResourceConfig {

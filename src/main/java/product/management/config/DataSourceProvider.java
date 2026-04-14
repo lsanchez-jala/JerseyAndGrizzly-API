@@ -2,20 +2,20 @@ package product.management.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.inject.Inject;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 public class DataSourceProvider {
 
-    public static DataSource create() {
-        String host     = getEnv("DB_HOST",     "localhost");
-        String port     = getEnv("DB_PORT",     "5432");
-        String db       = getEnv("DB_NAME",     "appdb");
-        String user     = getEnv("DB_USER",     "appuser");
-        String password = getEnv("DB_PASSWORD", "secret");
+    public static DataSource create(Properties properties) {
+        String url      = properties.getProperty("jersey.datasource.url");
+        String user     = properties.getProperty("jersey.datasource.username");
+        String password = properties.getProperty("jersey.datasource.password");
 
         HikariConfig cfg = new HikariConfig();
-        cfg.setJdbcUrl("jdbc:postgresql://" + host + ":" + port + "/" + db);
+        cfg.setJdbcUrl(url);
         cfg.setUsername(user);
         cfg.setPassword(password);
         cfg.setMaximumPoolSize(10);
