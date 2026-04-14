@@ -2,7 +2,6 @@ package product.management.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import jakarta.inject.Inject;
 
 import javax.sql.DataSource;
 import java.util.Properties;
