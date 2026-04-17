@@ -79,9 +79,9 @@ public class OrderService {
             mapper.toEntity(request, newOrder);
         }
         newOrder.setStatus(OrderStatus.CREATED);
-        Order result = repository.save(newOrder);
-        kafkaService.send(result.getId().toString(), result.toString());
-        return mapper.toDto(result);
+        OrderDTO result = mapper.toDto(repository.save(newOrder));
+        kafkaService.send(result.id().toString(), mapper.toGenericRecord(result));
+        return result;
     }
 
     public OrderDTO save(UUID id, OrderCreateRequest request) {
@@ -111,8 +111,8 @@ public class OrderService {
         if (Objects.equals(prev.status(), request.status())){
             throw new BadRequestException("Status: "+request.status()+" already assigned.");
         }
-        Order order = repository.updateStatus(orderId, OrderStatus.valueOf(request.status()));
-        kafkaService.send(orderId.toString(), order.toString());
-        return mapper.toDto(order);
+        OrderDTO order = mapper.toDto(repository.updateStatus(orderId, OrderStatus.valueOf(request.status())));
+        kafkaService.send(orderId.toString(), mapper.toGenericRecord(order));
+        return order;
     }
 }

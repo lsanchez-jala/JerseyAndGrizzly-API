@@ -118,8 +118,8 @@ public class ShipmentService {
         if (Objects.equals(prev.status(), request.status())){
             throw new BadRequestException("Status: "+request.status()+" already assigned.");
         }
-        Shipment shipment = repository.updateStatus(shipmentId, ShipmentStatus.valueOf(request.status()));
-        kafkaService.send(shipmentId.toString(), shipment.toString());
-        return mapper.toDto(shipment);
+        ShipmentDTO shipment = mapper.toDto(repository.updateStatus(shipmentId, ShipmentStatus.valueOf(request.status())));
+        kafkaService.send(shipmentId.toString(), mapper.toGenericRecord(shipment));
+        return shipment;
     }
 }

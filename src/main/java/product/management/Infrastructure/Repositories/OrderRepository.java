@@ -27,7 +27,7 @@ public class OrderRepository {
         order.setCustomerId(rs.getObject("customer_id", UUID.class));
         order.setShipmentId(rs.getObject("shipment_id", UUID.class));
         order.setStatus(OrderStatus.valueOf(rs.getString("status")));
-        order.setTotalAmount(rs.getFloat("total_amount"));
+//        order.setTotalAmount(rs.getFloat("total_amount"));
         order.setCreatedAt(rs.getTimestamp("created_at").toInstant());
         order.setUpdatedAt(rs.getTimestamp("updated_at").toInstant());
         return order;
