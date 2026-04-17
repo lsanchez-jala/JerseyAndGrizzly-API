@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "name": "ShipmentDTOSchema",
+  "namespace": "schema.Domain.DTO.Shipment",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "trackingCode",
+      "type": "string"
+    },
+    {
+      "name": "carrier",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "createdAt",
+      "type": "string"
+    },
+    {
+      "name": "updatedAt",
+      "type": "string"
+    }
+  ]
+}

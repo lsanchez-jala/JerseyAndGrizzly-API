@@ -7,7 +7,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import product.management.API.*;
-import product.management.Application.exception.AppExceptionMapper;
+import product.management.Application.exception.GenericExceptionMapper;
 
 @Singleton
 @ApplicationPath("/api/v1")
@@ -29,7 +29,7 @@ public class MyApplication extends ResourceConfig {
         register(orderItemResource);
         register(shipmentResource);
         register(JacksonFeature.class);
-        register(AppExceptionMapper.class);
+        register(GenericExceptionMapper.class);
         property(ServerProperties.WADL_FEATURE_DISABLE, true);
     }
 }

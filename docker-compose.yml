@@ -10,14 +10,19 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend-app-net
 
   flyway:
     image: flyway/flyway
+    container_name: flyway
     command: -url=jdbc:postgresql://postgres:5432/appdb -schemas=public -user=appuser -password=secret -connectRetries=60 migrate
     volumes:
       - ./src/main/resources/Migrations:/flyway/sql
     depends_on:
       - postgres
+    networks:
+      - backend-app-net
 
   broker:
     image: apache/kafka:4.2.0
@@ -25,13 +30,14 @@ services:
     ports:
       - "9092:9092"
       - "9093:9093"
+      - "29092:29092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -40,25 +46,50 @@ services:
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     volumes:
       - kafka-data:/var/lib/kafka/data
+    networks:
+      - backend-app-net
 
-#  backend:
-#    build: .
-#    container_name: jersey-app
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      KAFKA_BOOTSTRAP_SERVERS: broker:9092
-#      DB_HOST: postgres
-#      DB_PORT: 5432
-#      DB_NAME: appdb
-#      DB_USER: appuser
-#      DB_PASSWORD: secret
-#    depends_on:
-#      broker:
-#        condition: service_started
-#      postgres:
-#        condition: service_started
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.9.0
+    container_name: schema-registry
+    depends_on:
+      - broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker:29092   # internal Docker network
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    networks:
+      - backend-app-net
+
+  backend:
+    build: .
+    image: jersey-app/backend
+    restart: always
+    container_name: jersey-app
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: broker:9092
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: appdb
+      DB_USER: appuser
+      DB_PASSWORD: secret
+    depends_on:
+      broker:
+        condition: service_started
+      postgres:
+        condition: service_started
+      schema-registry:
+        condition: service_started
+    networks:
+      - backend-app-net
 
 volumes:
   kafka-data:
   pgdata:
+
+networks:
+  backend-app-net:

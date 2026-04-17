@@ -1,0 +1,49 @@
+{
+  "type": "record",
+  "name": "OrderDTOSchema",
+  "namespace": "schema.Domain.DTO.Order",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "customerId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "shipmentId",
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "logicalType": "uuid"
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "totalAmount",
+      "type": ["null", "float"],
+      "default": null
+    },
+    {
+      "name": "createdAt",
+      "type": "string"
+    },
+    {
+      "name": "updatedAt",
+      "type": "string"
+    }
+  ]
+}

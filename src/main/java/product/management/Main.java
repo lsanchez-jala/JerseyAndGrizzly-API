@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         final ServiceComponent component = DaggerServiceComponent.builder().build();
 
+        component.schemaRegistryService().registerAll();
 
         HttpServer server = component.httpServer();
         server.start();
