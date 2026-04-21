@@ -9,7 +9,7 @@ import product.management.Domain.DTO.Product.ProductDTO;
 import product.management.Domain.DTO.Product.ProductRequest;
 import product.management.Domain.Models.Product;
 import product.management.Infrastructure.Mappers.ProductMapper;
-import product.management.Infrastructure.Repositories.ProductRepository;
+import product.management.Infrastructure.Repositories.IProductRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,11 +17,11 @@ import java.util.UUID;
 @Singleton
 public class ProductService implements IProductService {
 
-    private final ProductRepository repository;
+    private final IProductRepository repository;
     private final ProductMapper mapper;
 
     @Inject
-    public ProductService(ProductRepository repository, ProductMapper mapper) {
+    public ProductService(IProductRepository repository, ProductMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }

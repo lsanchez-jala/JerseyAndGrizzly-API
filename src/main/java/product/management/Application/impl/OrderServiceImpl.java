@@ -14,7 +14,7 @@ import product.management.Domain.DTO.Order.OrderStatusRequest;
 import product.management.Domain.Enums.OrderStatus;
 import product.management.Domain.Models.Order;
 import product.management.Infrastructure.Mappers.OrderMapper;
-import product.management.Infrastructure.Repositories.OrderRepository;
+import product.management.Infrastructure.Repositories.IOrderRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,14 +24,14 @@ import java.util.UUID;
 @Singleton
 public class OrderServiceImpl implements IOrderService {
 
-    private final OrderRepository repository;
+    private final IOrderRepository repository;
     private final IKafkaProducerService kafkaService;
     private final OrderMapper mapper;
     private final ICustomerService customerService;
     private final IShipmentService shipmentService;
 
     @Inject
-    public OrderServiceImpl(OrderRepository repository, IKafkaProducerService kafkaService, OrderMapper mapper, ICustomerService customerService, IShipmentService shipmentService) {
+    public OrderServiceImpl(IOrderRepository repository, IKafkaProducerService kafkaService, OrderMapper mapper, ICustomerService customerService, IShipmentService shipmentService) {
         this.repository = repository;
         this.kafkaService = kafkaService;
         this.mapper = mapper;

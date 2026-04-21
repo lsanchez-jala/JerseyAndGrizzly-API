@@ -6,7 +6,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import product.management.Application.impl.SchemaRegistryService;
 
 @Singleton
-@Component(modules = { AppModule.class, AppServicesModule.class })
+@Component(modules = { AppModule.class, AppServicesModule.class, AppRepositoryModule.class})
 public interface ServiceComponent {
 
     HttpServer httpServer();

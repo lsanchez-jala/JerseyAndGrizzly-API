@@ -1,9 +1,10 @@
-package product.management.Infrastructure.Repositories;
+package product.management.Infrastructure.Repositories.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import product.management.Domain.DTO.OrderItem.OrderItemRequest;
 import product.management.Domain.Models.OrderItem;
+import product.management.Infrastructure.Repositories.IOrderItemRepository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Singleton
-public class OrderItemRepository {
+public class OrderItemRepository implements IOrderItemRepository {
 
     private final DataSource dataSource;
 

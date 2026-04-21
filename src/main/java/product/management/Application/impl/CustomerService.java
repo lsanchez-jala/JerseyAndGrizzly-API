@@ -9,7 +9,7 @@ import product.management.Domain.DTO.Customer.CustomerDTO;
 import product.management.Domain.DTO.Customer.CustomerRequest;
 import product.management.Domain.Models.Customer;
 import product.management.Infrastructure.Mappers.CustomerMapper;
-import product.management.Infrastructure.Repositories.CustomerRepository;
+import product.management.Infrastructure.Repositories.ICustomerRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,11 +18,11 @@ import java.util.regex.Pattern;
 @Singleton
 public class CustomerService implements ICustomerService {
 
-    private final CustomerRepository repository;
+    private final ICustomerRepository repository;
     private final CustomerMapper mapper;
 
     @Inject
-    public CustomerService(CustomerRepository repository, CustomerMapper mapper) {
+    public CustomerService(ICustomerRepository repository, CustomerMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }

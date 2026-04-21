@@ -1,9 +1,10 @@
-package product.management.Infrastructure.Repositories;
+package product.management.Infrastructure.Repositories.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import product.management.Domain.DTO.Customer.CustomerRequest;
 import product.management.Domain.Models.Customer;
+import product.management.Infrastructure.Repositories.ICustomerRepository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,34 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Singleton
-public class CustomerRepository {
+public class CustomerRepository implements ICustomerRepository {
 
     private final DataSource dataSource;
 
     @Inject
     public CustomerRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-//        ensureTable();
-    }
-
-    private void ensureTable() {
-        String sql = """
-                CREATE TABLE IF NOT EXISTS customer (
-                    id          UUID                        PRIMARY KEY DEFAULT gen_random_uuid(),
-                    first_name  VARCHAR(255)                NOT NULL,
-                    last_name   VARCHAR(255)                NOT NULL,
-                    email       VARCHAR(255)                NOT NULL UNIQUE,
-                    created_at  TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now(),
-                    updated_at  TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now()
-                );
-                """;
-
-        try (Connection connection = dataSource.getConnection()) {
-            Statement st = connection.createStatement();
-            st.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to ensure customer table", e);
-        }
     }
 
     private Customer mapRow(ResultSet rs) throws SQLException {

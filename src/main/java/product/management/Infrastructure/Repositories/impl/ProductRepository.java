@@ -1,9 +1,10 @@
-package product.management.Infrastructure.Repositories;
+package product.management.Infrastructure.Repositories.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import product.management.Domain.DTO.Product.ProductRequest;
 import product.management.Domain.Models.Product;
+import product.management.Infrastructure.Repositories.IProductRepository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Singleton
-public class ProductRepository {
+public class ProductRepository implements IProductRepository {
 
     private final DataSource dataSource;
 

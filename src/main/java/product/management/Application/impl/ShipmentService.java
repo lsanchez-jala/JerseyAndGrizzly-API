@@ -12,7 +12,7 @@ import product.management.Domain.DTO.Shipment.ShipmentRequest;
 import product.management.Domain.Enums.ShipmentStatus;
 import product.management.Domain.Models.Shipment;
 import product.management.Infrastructure.Mappers.ShipmentMapper;
-import product.management.Infrastructure.Repositories.ShipmentRepository;
+import product.management.Infrastructure.Repositories.IShipmentRepository;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -25,12 +25,12 @@ import java.util.stream.IntStream;
 @Singleton
 public class ShipmentService implements IShipmentService {
 
-    private final ShipmentRepository repository;
+    private final IShipmentRepository repository;
     private final ShipmentMapper mapper;
     private final IKafkaProducerService kafkaService;
 
     @Inject
-    public ShipmentService(ShipmentRepository repository, ShipmentMapper mapper, IKafkaProducerService kafkaService) {
+    public ShipmentService(IShipmentRepository repository, ShipmentMapper mapper, IKafkaProducerService kafkaService) {
         this.repository = repository;
         this.mapper = mapper;
         this.kafkaService = kafkaService;

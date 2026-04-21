@@ -9,7 +9,7 @@ import product.management.Domain.DTO.OrderItem.OrderItemDTO;
 import product.management.Domain.DTO.OrderItem.OrderItemRequest;
 import product.management.Domain.Models.OrderItem;
 import product.management.Infrastructure.Mappers.OrderItemMapper;
-import product.management.Infrastructure.Repositories.OrderItemRepository;
+import product.management.Infrastructure.Repositories.IOrderItemRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,13 +17,13 @@ import java.util.UUID;
 @Singleton
 public class OrderItemService implements IOrderItemService {
 
-    private final OrderItemRepository repository;
+    private final IOrderItemRepository repository;
     private final ProductService productService;
     private final OrderServiceImpl orderService;
     private final OrderItemMapper mapper;
 
     @Inject
-    public OrderItemService(OrderItemRepository repository, ProductService productService, OrderServiceImpl orderService, OrderItemMapper mapper) {
+    public OrderItemService(IOrderItemRepository repository, ProductService productService, OrderServiceImpl orderService, OrderItemMapper mapper) {
         this.repository = repository;
         this.productService = productService;
         this.orderService = orderService;

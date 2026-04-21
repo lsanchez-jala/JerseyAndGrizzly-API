@@ -10,7 +10,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import product.management.Infrastructure.Mappers.*;
-import product.management.Infrastructure.Repositories.*;
+import product.management.Infrastructure.Repositories.impl.*;
 import product.management.MyApplication;
 
 import javax.sql.DataSource;
