@@ -65,8 +65,7 @@ services:
       - backend-app-net
 
   backend:
-    build: .
-    image: jersey-app/backend
+    image: jersey-app-backend:latest
     restart: always
     container_name: jersey-app
     ports:
