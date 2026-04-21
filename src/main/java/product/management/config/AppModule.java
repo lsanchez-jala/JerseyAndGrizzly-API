@@ -2,8 +2,6 @@ package product.management.config;
 
 import dagger.Module;
 import dagger.Provides;
-import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
-import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;

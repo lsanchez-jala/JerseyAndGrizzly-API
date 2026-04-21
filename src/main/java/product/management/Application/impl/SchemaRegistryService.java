@@ -1,4 +1,4 @@
-package product.management.Application;
+package product.management.Application.impl;
 
 import io.confluent.kafka.schemaregistry.avro.AvroSchema;
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
@@ -7,6 +7,7 @@ import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientExcept
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.avro.Schema;
+import product.management.Application.ISchemaRegistryService;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Singleton
-public class SchemaRegistryService {
+public class SchemaRegistryService implements ISchemaRegistryService {
 
     private final SchemaRegistryClient client;
 

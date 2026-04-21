@@ -1,7 +1,8 @@
-package product.management.Application;
+package product.management.Application.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import product.management.Application.ICustomerService;
 import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.Customer.CustomerDTO;
@@ -15,7 +16,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Singleton
-public class CustomerService {
+public class CustomerService implements ICustomerService {
 
     private final CustomerRepository repository;
     private final CustomerMapper mapper;

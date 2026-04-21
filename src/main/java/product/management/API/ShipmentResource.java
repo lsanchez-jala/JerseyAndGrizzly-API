@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import product.management.Application.ShipmentService;
+import product.management.Application.IShipmentService;
 import product.management.Domain.DTO.Shipment.ShipmentDTO;
 import product.management.Domain.DTO.Shipment.ShipmentRequest;
 
@@ -18,10 +18,10 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ShipmentResource {
 
-    private final ShipmentService service;
+    private final IShipmentService service;
 
     @Inject
-    public ShipmentResource(ShipmentService service) {
+    public ShipmentResource(IShipmentService service) {
         this.service = service;
     }
 

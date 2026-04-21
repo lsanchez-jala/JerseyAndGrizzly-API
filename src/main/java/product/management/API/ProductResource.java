@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import product.management.Application.ProductService;
+import product.management.Application.IProductService;
 import product.management.Domain.DTO.Product.ProductDTO;
 import product.management.Domain.DTO.Product.ProductRequest;
 
@@ -18,10 +18,10 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProductResource {
 
-    private final ProductService service;
+    private final IProductService service;
 
     @Inject
-    public ProductResource(ProductService service) {
+    public ProductResource(IProductService service) {
         this.service = service;
     }
 

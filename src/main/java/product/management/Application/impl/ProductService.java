@@ -1,7 +1,8 @@
-package product.management.Application;
+package product.management.Application.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import product.management.Application.IProductService;
 import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.Product.ProductDTO;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Singleton
-public class ProductService {
+public class ProductService implements IProductService {
 
     private final ProductRepository repository;
     private final ProductMapper mapper;

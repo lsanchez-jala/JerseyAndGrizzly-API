@@ -1,8 +1,10 @@
-package product.management.Application;
+package product.management.Application.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.validation.constraints.NotNull;
+import product.management.Application.IKafkaProducerService;
+import product.management.Application.IShipmentService;
 import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.Shipment.ShipmentDTO;
@@ -21,14 +23,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Singleton
-public class ShipmentService {
+public class ShipmentService implements IShipmentService {
 
     private final ShipmentRepository repository;
     private final ShipmentMapper mapper;
-    private final KafkaProducerService kafkaService;
+    private final IKafkaProducerService kafkaService;
 
     @Inject
-    public ShipmentService(ShipmentRepository repository, ShipmentMapper mapper, KafkaProducerService kafkaService) {
+    public ShipmentService(ShipmentRepository repository, ShipmentMapper mapper, IKafkaProducerService kafkaService) {
         this.repository = repository;
         this.mapper = mapper;
         this.kafkaService = kafkaService;

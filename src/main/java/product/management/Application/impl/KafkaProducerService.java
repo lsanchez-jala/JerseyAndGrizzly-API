@@ -1,4 +1,4 @@
-package product.management.Application;
+package product.management.Application.impl;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import jakarta.inject.Inject;
@@ -10,12 +10,13 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.jetbrains.annotations.NotNull;
+import product.management.Application.IKafkaProducerService;
 
 import java.util.Properties;
 import java.util.concurrent.Future;
 
 @Singleton
-public class KafkaProducerService {
+public class KafkaProducerService implements IKafkaProducerService {
 
     private final String broker;
     private final String topic;

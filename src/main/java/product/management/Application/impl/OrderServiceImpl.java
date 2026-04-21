@@ -1,7 +1,11 @@
-package product.management.Application;
+package product.management.Application.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import product.management.Application.ICustomerService;
+import product.management.Application.IKafkaProducerService;
+import product.management.Application.IOrderService;
+import product.management.Application.IShipmentService;
 import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.Order.OrderDTO;
@@ -18,16 +22,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Singleton
-public class OrderService {
+public class OrderServiceImpl implements IOrderService {
 
     private final OrderRepository repository;
-    private final KafkaProducerService kafkaService;
+    private final IKafkaProducerService kafkaService;
     private final OrderMapper mapper;
-    private final CustomerService customerService;
-    private final ShipmentService shipmentService;
+    private final ICustomerService customerService;
+    private final IShipmentService shipmentService;
 
     @Inject
-    public OrderService(OrderRepository repository, KafkaProducerService kafkaService, OrderMapper mapper, CustomerService customerService, ShipmentService shipmentService) {
+    public OrderServiceImpl(OrderRepository repository, IKafkaProducerService kafkaService, OrderMapper mapper, ICustomerService customerService, IShipmentService shipmentService) {
         this.repository = repository;
         this.kafkaService = kafkaService;
         this.mapper = mapper;

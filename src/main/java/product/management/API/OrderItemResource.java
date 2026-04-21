@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import product.management.Application.OrderItemService;
+import product.management.Application.IOrderItemService;
 import product.management.Domain.DTO.OrderItem.OrderItemDTO;
 import product.management.Domain.DTO.OrderItem.OrderItemRequest;
 
@@ -18,10 +18,10 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderItemResource {
 
-    private final OrderItemService service;
+    private final IOrderItemService service;
 
     @Inject
-    public OrderItemResource(OrderItemService service) {
+    public OrderItemResource(IOrderItemService service) {
         this.service = service;
     }
 

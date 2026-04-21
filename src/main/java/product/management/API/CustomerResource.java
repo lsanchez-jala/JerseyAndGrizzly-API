@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import product.management.Application.CustomerService;
+import product.management.Application.ICustomerService;
 import product.management.Domain.DTO.Customer.CustomerDTO;
 import product.management.Domain.DTO.Customer.CustomerRequest;
 
@@ -18,10 +18,10 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource {
 
-    private final CustomerService service;
+    private final ICustomerService service;
 
     @Inject
-    public CustomerResource(CustomerService service) {
+    public CustomerResource(ICustomerService service) {
         this.service = service;
     }
 
