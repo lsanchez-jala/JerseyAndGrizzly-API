@@ -51,7 +51,6 @@ public class ShipmentMapper {
     }
 
     public void toEntity(ShipmentRequest request, Shipment entity) {
-        if (request.trackingCode() != null)  entity.setTrackingCode(request.trackingCode());
         if (request.carrier() != null)       entity.setCarrier(request.carrier());
         if (request.status() != null)        entity.setStatus(ShipmentStatus.valueOf(request.status()));
     }

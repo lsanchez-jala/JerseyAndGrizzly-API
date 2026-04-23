@@ -3,6 +3,8 @@ package product.management.Application.impl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import product.management.Application.IOrderItemService;
+import product.management.Application.IOrderService;
+import product.management.Application.IProductService;
 import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
 import product.management.Domain.DTO.OrderItem.OrderItemDTO;
@@ -18,12 +20,12 @@ import java.util.UUID;
 public class OrderItemService implements IOrderItemService {
 
     private final IOrderItemRepository repository;
-    private final ProductService productService;
-    private final OrderServiceImpl orderService;
+    private final IProductService productService;
+    private final IOrderService orderService;
     private final OrderItemMapper mapper;
 
     @Inject
-    public OrderItemService(IOrderItemRepository repository, ProductService productService, OrderServiceImpl orderService, OrderItemMapper mapper) {
+    public OrderItemService(IOrderItemRepository repository, IProductService productService, IOrderService orderService, OrderItemMapper mapper) {
         this.repository = repository;
         this.productService = productService;
         this.orderService = orderService;

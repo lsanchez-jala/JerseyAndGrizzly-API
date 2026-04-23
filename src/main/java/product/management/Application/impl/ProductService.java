@@ -72,6 +72,9 @@ public class ProductService implements IProductService {
         if(request.price() <= 0){
             throw new BadRequestException("The product's price must not ben equal or less than 0.");
         }
+        if(request.stock() == null ){
+            throw new BadRequestException("The product's stock must not be empty");
+        }
         if(request.stock() <= 0){
             throw new BadRequestException("The product's stock must not ben equal or less than 0.");
         }
