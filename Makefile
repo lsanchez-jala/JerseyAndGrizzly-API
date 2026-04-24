@@ -10,10 +10,10 @@ FULL_IMAGE 	:= $(IMAGE_NAME):$(GIT_HASH)
 
 ## make test	tests the application
 test:
-	mvn test
+	mvn test -f pom.xml
 
 ## make build 	build the docker image from the Dockerfile
-build:
+build: test
 	@echo "Building $(FULL_IMAGE) ..."
 	docker build \
 		--build-arg BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ") \
