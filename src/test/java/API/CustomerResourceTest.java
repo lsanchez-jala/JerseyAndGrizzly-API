@@ -16,7 +16,7 @@ import product.management.Application.impl.CustomerService;
 import product.management.Domain.DTO.Customer.CustomerRequest;
 import product.management.Domain.Models.Customer;
 import product.management.Infrastructure.Mappers.CustomerMapper;
-import product.management.Infrastructure.Repositories.Fakes.FakeCustomerRepository;
+import product.management.Infrastructure.Repositories.mocks.FakeCustomerRepository;
 
 import java.time.Instant;
 import java.util.List;

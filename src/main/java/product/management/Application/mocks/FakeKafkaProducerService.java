@@ -1,4 +1,4 @@
-package product.management.Application.Fakes;
+package product.management.Application.mocks;
 
 import org.apache.avro.generic.GenericRecord;
 import product.management.Application.IKafkaProducerService;

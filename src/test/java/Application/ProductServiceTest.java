@@ -9,7 +9,7 @@ import product.management.Domain.DTO.Product.ProductDTO;
 import product.management.Domain.DTO.Product.ProductRequest;
 import product.management.Domain.Models.Product;
 import product.management.Infrastructure.Mappers.ProductMapper;
-import product.management.Infrastructure.Repositories.Fakes.FakeProductRepository;
+import product.management.Infrastructure.Repositories.mocks.FakeProductRepository;
 
 import java.util.List;
 import java.util.UUID;

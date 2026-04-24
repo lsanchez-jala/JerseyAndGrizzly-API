@@ -23,7 +23,7 @@ public class GreetingsResourceIntegrationTest extends JerseyTest {
         Response response = target("/hello").request().get();
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(MediaType.TEXT_HTML, response.getHeaderString(HttpHeaders.CONTENT_TYPE));
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaderString(HttpHeaders.CONTENT_TYPE));
 
         String content = response.readEntity(String.class);
         assertEquals("hello world", content);

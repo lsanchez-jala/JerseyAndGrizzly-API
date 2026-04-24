@@ -1,4 +1,4 @@
-package product.management.Infrastructure.Repositories.Fakes;
+package product.management.Infrastructure.Repositories.mocks;
 
 import product.management.Domain.Enums.OrderStatus;
 import product.management.Domain.Models.Order;

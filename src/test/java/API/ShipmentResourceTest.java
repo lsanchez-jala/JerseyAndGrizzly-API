@@ -11,14 +11,14 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
 import product.management.API.ShipmentResource;
 import product.management.Application.IShipmentService;
-import product.management.Application.Fakes.FakeKafkaProducerService;
+import product.management.Application.mocks.FakeKafkaProducerService;
 import product.management.Application.exception.GenericExceptionMapper;
 import product.management.Application.impl.ShipmentService;
 import product.management.Domain.DTO.Shipment.ShipmentRequest;
 import product.management.Domain.Enums.ShipmentStatus;
 import product.management.Domain.Models.Shipment;
 import product.management.Infrastructure.Mappers.ShipmentMapper;
-import product.management.Infrastructure.Repositories.Fakes.FakeShipmentRepository;
+import product.management.Infrastructure.Repositories.mocks.FakeShipmentRepository;
 
 import java.time.Instant;
 import java.util.List;
