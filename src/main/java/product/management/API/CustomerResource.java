@@ -1,5 +1,13 @@
 package product.management.API;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -16,6 +24,7 @@ import java.util.UUID;
 @Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Customers", description = "Customer management operations")
 public class CustomerResource {
 
     private final ICustomerService service;
@@ -26,6 +35,17 @@ public class CustomerResource {
     }
 
     @GET
+    @Operation(
+            summary = "List all customers",
+            description = "Returns a list of all registered customers",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List of customers retrieved successfully",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = CustomerDTO.class)))
+                    )
+            }
+    )
     public Response list() {
         var result = service.findAll();
         return Response.ok(result).build();
@@ -33,18 +53,68 @@ public class CustomerResource {
 
     @GET
     @Path("{id}")
-    public Response get(@PathParam("id") UUID id) {
+    @Operation(
+            summary = "Get customer by ID",
+            description = "Returns a single customer identified by their UUID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Customer found",
+                            content = @Content(schema = @Schema(implementation = CustomerDTO.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Customer not found")
+            }
+    )
+    public Response get(
+            @Parameter(description = "UUID of the customer to retrieve", required = true)
+            @PathParam("id") UUID id
+    ) {
         return Response.ok(service.findById(id)).build();
     }
 
     @GET
     @Path("email/{email}")
-    public Response getByEmail(@PathParam("email") String email) {
+    @Operation(
+            summary = "Get customer by email",
+            description = "Returns a single customer identified by their email address",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Customer found",
+                            content = @Content(schema = @Schema(implementation = CustomerDTO.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Customer not found")
+            }
+    )
+    public Response getByEmail(
+            @Parameter(description = "Email address of the customer to retrieve", required = true)
+            @PathParam("email") String email
+    ) {
         return Response.ok(service.findByEmail(email)).build();
     }
 
     @POST
-    public Response create(CustomerRequest request, @Context UriInfo uriInfo) {
+    @Operation(
+            summary = "Create a new customer",
+            description = "Creates a new customer and returns the created resource",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Customer created successfully",
+                            content = @Content(schema = @Schema(implementation = CustomerDTO.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Invalid request payload")
+            }
+    )
+    public Response create(
+            @RequestBody(
+                    description = "Customer data to create",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CustomerRequest.class))
+            )
+            CustomerRequest request,
+            @Context UriInfo uriInfo
+    ) {
         CustomerDTO created = service.save(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
         return Response.created(location).entity(created).build();
@@ -52,13 +122,46 @@ public class CustomerResource {
 
     @PUT
     @Path("{id}")
-    public Response update(@PathParam("id") UUID id, CustomerRequest request) {
+    @Operation(
+            summary = "Update customer by ID",
+            description = "Updates an existing customer identified by their UUID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Customer updated successfully",
+                            content = @Content(schema = @Schema(implementation = CustomerDTO.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Customer not found"),
+                    @ApiResponse(responseCode = "400", description = "Invalid request payload")
+            }
+    )
+    public Response update(
+            @Parameter(description = "UUID of the customer to update", required = true)
+            @PathParam("id") UUID id,
+            @RequestBody(
+                    description = "Updated customer data",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CustomerRequest.class))
+            )
+            CustomerRequest request
+    ) {
         return Response.ok(service.save(id, request)).build();
     }
 
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") UUID id) {
+    @Operation(
+            summary = "Delete customer by ID",
+            description = "Deletes an existing customer identified by their UUID",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Customer deleted successfully"),
+                    @ApiResponse(responseCode = "404", description = "Customer not found")
+            }
+    )
+    public Response delete(
+            @Parameter(description = "UUID of the customer to delete", required = true)
+            @PathParam("id") UUID id
+    ) {
         service.delete(id);
         return Response.noContent().build();
     }
