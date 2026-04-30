@@ -87,6 +87,26 @@ services:
     networks:
       - backend-app-net
 
+  consumer1:
+    image: kafka_consumer:latest
+    restart: always
+    container_name: consumer_1
+    depends_on:
+      broker:
+        condition: service_started
+    networks:
+      - backend-app-net
+
+  consumer2:
+    image: kafka_consumer:latest
+    restart: always
+    container_name: consumer_2
+    depends_on:
+      broker:
+        condition: service_started
+    networks:
+      - backend-app-net
+
 volumes:
   kafka-data:
   pgdata:
