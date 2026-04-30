@@ -1,4 +1,4 @@
-package product.management.config;
+package product.management.API;
 
 import dagger.Binds;
 import dagger.Module;
@@ -6,7 +6,7 @@ import product.management.Application.*;
 import product.management.Application.impl.*;
 
 @Module
-public abstract class AppServicesModule {
+public abstract class APIAbstractModule {
     @Binds
     abstract IOrderService bindOrderService(OrderServiceImpl impl);
     @Binds
@@ -21,4 +21,5 @@ public abstract class AppServicesModule {
     abstract IKafkaProducerService bindKafkaProducerService(KafkaProducerService impl);
     @Binds
     abstract ISchemaRegistryService bindSchemaRegistryService(SchemaRegistryService impl);
+
 }

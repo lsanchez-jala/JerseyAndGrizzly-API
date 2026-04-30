@@ -1,6 +1,10 @@
 package product.management;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import product.management.API.APIComponent;
+import product.management.API.DaggerAPIComponent;
+import product.management.Application.ApplicationComponent;
+import product.management.Application.DaggerApplicationComponent;
 import product.management.config.DaggerServiceComponent;
 import product.management.config.ServiceComponent;
 
@@ -10,11 +14,13 @@ public class Main {
     public static final String BASE_URI = "http://localhost:8080/";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        final ServiceComponent component = DaggerServiceComponent.builder().build();
+        final ServiceComponent serviceComponent = DaggerServiceComponent.builder().build();
+        final ApplicationComponent appComponent = DaggerApplicationComponent.builder().build();
+        final APIComponent apiComponent = DaggerAPIComponent.builder().build();
 
-        component.schemaRegistryService().registerAll();
+        serviceComponent.schemaRegistryService().registerAll();
 
-        HttpServer server = component.httpServer();
+        HttpServer server = serviceComponent.httpServer();
         server.start();
 
         System.out.println("Server started at: " + BASE_URI);

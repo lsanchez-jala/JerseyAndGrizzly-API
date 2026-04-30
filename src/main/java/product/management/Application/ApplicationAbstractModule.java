@@ -1,4 +1,4 @@
-package product.management.config;
+package product.management.Application;
 
 import dagger.Binds;
 import dagger.Module;
@@ -6,7 +6,7 @@ import product.management.Infrastructure.Repositories.*;
 import product.management.Infrastructure.Repositories.impl.*;
 
 @Module
-public abstract class AppRepositoryModule {
+public abstract class ApplicationAbstractModule {
     @Binds
     abstract IOrderRepository bindOrderRepo(OrderRepository impl);
     @Binds
@@ -18,3 +18,4 @@ public abstract class AppRepositoryModule {
     @Binds
     abstract ICustomerRepository bindCustomerRepo(CustomerRepository impl);
 }
+
