@@ -90,6 +90,7 @@ public class KafkaProducerService implements IKafkaProducerService {
             logger.info("KafkaProducer Sent -> topic={} partition={} offset={}",
                     metadata.topic(), metadata.partition(), metadata.offset());
         } catch (Exception e) {
+            logger.error("Failed to send Kafka message: {}", e.getMessage());
             throw new RuntimeException("Failed to send Kafka message", e);
         }
     }

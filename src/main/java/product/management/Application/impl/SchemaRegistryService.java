@@ -7,6 +7,8 @@ import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientExcept
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.avro.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.ISchemaRegistryService;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.util.Properties;
 public class SchemaRegistryService implements ISchemaRegistryService {
 
     private final SchemaRegistryClient client;
-
+    private static final Logger logger = LoggerFactory.getLogger(SchemaRegistryService.class);
     @Inject
     public SchemaRegistryService(Properties props) {
         this.client = new CachedSchemaRegistryClient(
@@ -41,7 +43,7 @@ public class SchemaRegistryService implements ISchemaRegistryService {
             String subject = resolveSubject(resourcePath); // e.g. "order-dto-value"
             Schema schema = new Schema.Parser().parse(schemaJson);
             client.register(subject, new AvroSchema(schema));
-            System.out.println("Registered schema: " + subject);
+            logger.info("Schema registered for subject {}", subject);
         } catch (IOException | RestClientException e) {
             throw new RuntimeException("Failed to register schema: " + resourcePath, e);
         }
