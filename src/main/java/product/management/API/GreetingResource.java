@@ -16,7 +16,7 @@ import java.net.URI;
 @Path("/hello")
 public class GreetingResource {
 
-    private Logger logger = LoggerFactory.getLogger(GreetingResource.class);
+    private final Logger logger = LoggerFactory.getLogger(GreetingResource.class);
 
     @Inject
     public GreetingResource() {

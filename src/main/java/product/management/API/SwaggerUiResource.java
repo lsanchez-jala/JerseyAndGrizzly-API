@@ -13,7 +13,7 @@ import java.io.InputStream;
 
 @Path("/swagger-ui")
 public class SwaggerUiResource {
-    private Logger logger = LoggerFactory.getLogger(SwaggerUiResource.class);
+    private final Logger logger = LoggerFactory.getLogger(SwaggerUiResource.class);
 
     @GET
     @Path("/index.html")

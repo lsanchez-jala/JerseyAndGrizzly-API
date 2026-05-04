@@ -30,7 +30,7 @@ import java.util.UUID;
 public class ShipmentResource {
 
     private final IShipmentService service;
-    private Logger logger = LoggerFactory.getLogger(ShipmentResource.class);
+    private final Logger logger = LoggerFactory.getLogger(ShipmentResource.class);
 
     @Inject
     public ShipmentResource(IShipmentService service) {

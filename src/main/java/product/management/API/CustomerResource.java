@@ -30,7 +30,7 @@ import java.util.UUID;
 public class CustomerResource {
 
     private final ICustomerService service;
-    private Logger logger = LoggerFactory.getLogger(CustomerResource.class);
+    private final Logger logger = LoggerFactory.getLogger(CustomerResource.class);
 
     @Inject
     public CustomerResource(ICustomerService service) {

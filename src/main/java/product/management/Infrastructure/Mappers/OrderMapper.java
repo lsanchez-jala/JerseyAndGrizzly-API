@@ -6,7 +6,6 @@ import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import product.management.Domain.DTO.Order.OrderDTO;
 import product.management.Domain.DTO.Order.OrderCreateRequest;
-import product.management.Domain.Enums.OrderStatus;
 import product.management.Domain.Models.Order;
 
 import java.io.IOException;

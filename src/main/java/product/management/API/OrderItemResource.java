@@ -29,7 +29,7 @@ import java.util.UUID;
 public class OrderItemResource {
 
     private final IOrderItemService service;
-    private Logger logger = LoggerFactory.getLogger(OrderItemResource.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderItemResource.class);
 
     @Inject
     public OrderItemResource(IOrderItemService service) {

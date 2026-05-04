@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
-import jakarta.validation.constraints.Null;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -32,7 +31,7 @@ import java.util.UUID;
 public class OrderResource {
 
     private final IOrderService service;
-    private Logger logger = LoggerFactory.getLogger(OrderResource.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderResource.class);
 
     @Inject
     public OrderResource(IOrderService service) {
@@ -141,7 +140,6 @@ public class OrderResource {
     public Response create(
             @RequestBody(
                     description = "Order data to create",
-                    required = false,
                     content = @Content(schema = @Schema(implementation = OrderCreateRequest.class))
             )
             OrderCreateRequest request,
