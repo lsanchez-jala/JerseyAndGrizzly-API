@@ -71,11 +71,11 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     public OrderDTO save(OrderCreateRequest request) {
-        if (request != null && request.shipmentId() != null ){
-            shipmentService.findById(request.shipmentId());
+        if (request != null &&  isValidUUID(request.shipmentId())){
+            shipmentService.findById(UUID.fromString(request.shipmentId()));
         }
-        if (request != null && request.customerId() != null){
-            customerService.findById(request.customerId());
+        if (request != null && isValidUUID(request.customerId())){
+            customerService.findById(UUID.fromString(request.customerId()));
         }
 
         Order newOrder = new Order();
@@ -90,11 +90,11 @@ public class OrderServiceImpl implements IOrderService {
 
     public OrderDTO save(UUID id, OrderCreateRequest request) {
         findById(id);
-        if (request.shipmentId() != null ){
-            shipmentService.findById(request.shipmentId());
+        if (request.shipmentId() != null && isValidUUID(request.shipmentId()) ){
+            shipmentService.findById(UUID.fromString(request.shipmentId()));
         }
-        if (request.customerId() != null){
-            customerService.findById(request.customerId());
+        if (request.customerId() != null && isValidUUID(request.customerId()) ){
+            customerService.findById(UUID.fromString(request.customerId()));
         }
         Order newOrder = new Order();
         mapper.toEntity(request, newOrder);
@@ -118,5 +118,17 @@ public class OrderServiceImpl implements IOrderService {
         OrderDTO order = mapper.toDto(repository.updateStatus(orderId, OrderStatus.valueOf(request.status())));
         kafkaService.send(orderId.toString(), mapper.toGenericRecord(order));
         return order;
+    }
+
+    private boolean isValidUUID(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            UUID uuid = UUID.fromString(str);
+            return str.equals(uuid.toString());
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

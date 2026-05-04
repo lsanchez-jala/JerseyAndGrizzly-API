@@ -11,6 +11,7 @@ import product.management.Domain.Models.Order;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Singleton
 public class OrderMapper {
@@ -55,7 +56,7 @@ public class OrderMapper {
     }
 
     public void toEntity(OrderCreateRequest request, Order entity) {
-        if (request.customerId() != null)   entity.setCustomerId(request.customerId());
-        if (request.shipmentId() != null)   entity.setShipmentId(request.shipmentId());
+        if (request.customerId() != null)   entity.setCustomerId(UUID.fromString(request.customerId()));
+        if (request.shipmentId() != null)   entity.setShipmentId(UUID.fromString(request.shipmentId()));
     }
 }

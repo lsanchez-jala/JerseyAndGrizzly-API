@@ -2,14 +2,14 @@ package product.management.Domain.DTO.Order;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.UUID;
+import jakarta.annotation.Nullable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record OrderCreateRequest(
         @JsonProperty("customerId")
-        String customerIdString,
-
-        UUID customerId,
-        UUID shipmentId
+        @Nullable
+        String customerId,
+        @Nullable
+        @JsonProperty("shipmentId")
+        String shipmentId
 ) {}

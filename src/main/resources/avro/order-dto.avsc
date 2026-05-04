@@ -12,10 +12,14 @@
     },
     {
       "name": "customerId",
-      "type": {
-        "type": "string",
-        "logicalType": "uuid"
-      }
+      "type": [
+        "null",
+        {
+          "type": "string",
+          "logicalType": "uuid"
+        }
+      ],
+      "default": null
     },
     {
       "name": "shipmentId",

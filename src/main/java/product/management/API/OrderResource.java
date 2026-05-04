@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.Null;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -140,7 +141,7 @@ public class OrderResource {
     public Response create(
             @RequestBody(
                     description = "Order data to create",
-                    required = true,
+                    required = false,
                     content = @Content(schema = @Schema(implementation = OrderCreateRequest.class))
             )
             OrderCreateRequest request,
