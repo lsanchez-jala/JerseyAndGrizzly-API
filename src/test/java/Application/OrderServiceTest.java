@@ -191,14 +191,14 @@ public class OrderServiceTest {
     void givenRequestWithExistingCustomer_whenSave_thenSucceeds() {
         Customer customer = buildCustomer("john@example.com");
         customerRepository.add(customer);
-        OrderCreateRequest request = new OrderCreateRequest(customer.getId(), null);
+        OrderCreateRequest request = new OrderCreateRequest(customer.getId().toString(), null);
 
         assertDoesNotThrow(() -> service.save(request));
     }
 
     @Test
     void givenRequestWithNonExistingCustomer_whenSave_thenThrowsElementNotFoundException() {
-        OrderCreateRequest request = new OrderCreateRequest(UUID.randomUUID(), null);
+        OrderCreateRequest request = new OrderCreateRequest(UUID.randomUUID().toString(), null);
 
         assertThrows(ElementNotFoundException.class, () -> service.save(request));
     }
@@ -207,14 +207,14 @@ public class OrderServiceTest {
     void givenRequestWithExistingShipment_whenSave_thenSucceeds() {
         Shipment shipment = buildShipment();
         shipmentRepository.add(shipment);
-        OrderCreateRequest request = new OrderCreateRequest(null, shipment.getId());
+        OrderCreateRequest request = new OrderCreateRequest(null, shipment.getId().toString());
 
         assertDoesNotThrow(() -> service.save(request));
     }
 
     @Test
     void givenRequestWithNonExistingShipment_whenSave_thenThrowsElementNotFoundException() {
-        OrderCreateRequest request = new OrderCreateRequest(null, UUID.randomUUID());
+        OrderCreateRequest request = new OrderCreateRequest(null, UUID.randomUUID().toString());
 
         assertThrows(ElementNotFoundException.class, () -> service.save(request));
     }
@@ -225,7 +225,7 @@ public class OrderServiceTest {
         customerRepository.add(customer);
         Shipment shipment = buildShipment();
         shipmentRepository.add(shipment);
-        OrderCreateRequest request = new OrderCreateRequest(customer.getId(), shipment.getId());
+        OrderCreateRequest request = new OrderCreateRequest(customer.getId().toString(), shipment.getId().toString());
 
         assertDoesNotThrow(() -> service.save(request));
     }
@@ -240,7 +240,7 @@ public class OrderServiceTest {
         orderRepository.add(order);
         Customer customer = buildCustomer("john@example.com");
         customerRepository.add(customer);
-        OrderCreateRequest request = new OrderCreateRequest(customer.getId(), null);
+        OrderCreateRequest request = new OrderCreateRequest(customer.getId().toString(), null);
 
         OrderDTO result = service.save(order.getId(), request);
 
@@ -259,7 +259,7 @@ public class OrderServiceTest {
     void givenNonExistingCustomerInUpdate_whenSaveWithId_thenThrowsElementNotFoundException() {
         Order order = buildOrder(null, null, OrderStatus.CREATED);
         orderRepository.add(order);
-        OrderCreateRequest request = new OrderCreateRequest(UUID.randomUUID(), null);
+        OrderCreateRequest request = new OrderCreateRequest(UUID.randomUUID().toString(), null);
 
         assertThrows(ElementNotFoundException.class,
                 () -> service.save(order.getId(), request));
@@ -269,7 +269,7 @@ public class OrderServiceTest {
     void givenNonExistingShipmentInUpdate_whenSaveWithId_thenThrowsElementNotFoundException() {
         Order order = buildOrder(null, null, OrderStatus.CREATED);
         orderRepository.add(order);
-        OrderCreateRequest request = new OrderCreateRequest(null, UUID.randomUUID());
+        OrderCreateRequest request = new OrderCreateRequest(null, UUID.randomUUID().toString());
 
         assertThrows(ElementNotFoundException.class,
                 () -> service.save(order.getId(), request));
