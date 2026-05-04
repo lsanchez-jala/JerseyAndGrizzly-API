@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import product.management.API.OrderResource;
 import product.management.Application.IOrderService;
 import product.management.Application.IShipmentService;
-import product.management.Application.mocks.FakeKafkaProducerService;
+import Mocks.Services.FakeKafkaProducerService;
 import product.management.Application.exception.GenericExceptionMapper;
 import product.management.Application.impl.CustomerService;
 import product.management.Application.impl.OrderServiceImpl;
@@ -27,9 +27,9 @@ import product.management.Domain.Models.Shipment;
 import product.management.Infrastructure.Mappers.CustomerMapper;
 import product.management.Infrastructure.Mappers.OrderMapper;
 import product.management.Infrastructure.Mappers.ShipmentMapper;
-import product.management.Infrastructure.Repositories.mocks.FakeCustomerRepository;
-import product.management.Infrastructure.Repositories.mocks.FakeOrderRepository;
-import product.management.Infrastructure.Repositories.mocks.FakeShipmentRepository;
+import Mocks.Repositories.FakeCustomerRepository;
+import Mocks.Repositories.FakeOrderRepository;
+import Mocks.Repositories.FakeShipmentRepository;
 
 import java.time.Instant;
 import java.util.List;
@@ -216,7 +216,7 @@ public class OrderResourceTest extends JerseyTest {
 
     @Test
     void givenRequestWithNonExistingCustomer_whenCreate_thenReturns404() {
-        OrderCreateRequest request = new OrderCreateRequest(UUID.randomUUID(), null);
+        OrderCreateRequest request = new OrderCreateRequest(UUID.randomUUID().toString(), null);
 
         Response response = target("/orders")
                 .request()
@@ -227,7 +227,7 @@ public class OrderResourceTest extends JerseyTest {
 
     @Test
     void givenRequestWithNonExistingShipment_whenCreate_thenReturns404() {
-        OrderCreateRequest request = new OrderCreateRequest(null, UUID.randomUUID());
+        OrderCreateRequest request = new OrderCreateRequest(null, UUID.randomUUID().toString());
 
         Response response = target("/orders")
                 .request()
@@ -240,7 +240,7 @@ public class OrderResourceTest extends JerseyTest {
     void givenRequestWithExistingCustomer_whenCreate_thenReturns201() {
         Customer customer = buildCustomer();
         customerRepository.add(customer);
-        OrderCreateRequest request = new OrderCreateRequest(customer.getId(), null);
+        OrderCreateRequest request = new OrderCreateRequest(customer.getId().toString(), null);
 
         Response response = target("/orders")
                 .request()
@@ -253,7 +253,7 @@ public class OrderResourceTest extends JerseyTest {
     void givenRequestWithExistingShipment_whenCreate_thenReturns201() {
         Shipment shipment = buildShipment();
         shipmentRepository.add(shipment);
-        OrderCreateRequest request = new OrderCreateRequest(null, shipment.getId());
+        OrderCreateRequest request = new OrderCreateRequest(null, shipment.getId().toString());
 
         Response response = target("/orders")
                 .request()

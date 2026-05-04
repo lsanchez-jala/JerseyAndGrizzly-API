@@ -1,4 +1,4 @@
-package product.management.Infrastructure.Repositories.mocks;
+package Mocks.Repositories;
 
 import product.management.Domain.DTO.Product.ProductRequest;
 import product.management.Domain.Models.Product;

@@ -1,4 +1,4 @@
-package product.management.Application.mocks;
+package Mocks.Services;
 
 import org.apache.avro.generic.GenericRecord;
 import product.management.Application.IKafkaProducerService;

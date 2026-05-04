@@ -16,7 +16,7 @@ import product.management.Application.impl.ProductService;
 import product.management.Domain.DTO.Product.ProductRequest;
 import product.management.Domain.Models.Product;
 import product.management.Infrastructure.Mappers.ProductMapper;
-import product.management.Infrastructure.Repositories.mocks.FakeProductRepository;
+import Mocks.Repositories.FakeProductRepository;
 
 import java.util.List;
 import java.util.UUID;
