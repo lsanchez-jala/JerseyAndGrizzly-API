@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.IShipmentService;
 import product.management.Domain.DTO.Shipment.ShipmentDTO;
 import product.management.Domain.DTO.Shipment.ShipmentRequest;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class ShipmentResource {
 
     private final IShipmentService service;
+    private Logger logger = LoggerFactory.getLogger(ShipmentResource.class);
 
     @Inject
     public ShipmentResource(IShipmentService service) {
@@ -46,7 +49,8 @@ public class ShipmentResource {
                     )
             }
     )
-    public Response list() {
+    public Response list(@Context UriInfo uriInfo) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findAll()).build();
     }
 
@@ -66,8 +70,10 @@ public class ShipmentResource {
     )
     public Response get(
             @Parameter(description = "UUID of the shipment to retrieve", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findById(id)).build();
     }
 
@@ -89,6 +95,7 @@ public class ShipmentResource {
             @Parameter(description = "Tracking code of the shipment to retrieve", required = true)
             @PathParam("trackingCode") String trackingCode
     ) {
+        logger.info("GET by tracking code {}", trackingCode);
         return Response.ok(service.findByTrackingCode(trackingCode)).build();
     }
 
@@ -116,6 +123,7 @@ public class ShipmentResource {
     ) {
         ShipmentDTO created = service.save(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
+        logger.info("POST {}",  uriInfo.getRequestUri());
         return Response.created(location).entity(created).build();
     }
 
@@ -142,8 +150,10 @@ public class ShipmentResource {
                     required = true,
                     content = @Content(schema = @Schema(implementation = ShipmentRequest.class))
             )
-            ShipmentRequest request
+            ShipmentRequest request,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("PATCH {}",  uriInfo.getRequestUri());
         return Response.ok(service.save(id, request)).build();
     }
 
@@ -159,9 +169,11 @@ public class ShipmentResource {
     )
     public Response delete(
             @Parameter(description = "UUID of the shipment to delete", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
         service.delete(id);
+        logger.info("DELETE {}",  uriInfo.getRequestUri());
         return Response.noContent().build();
     }
 
@@ -193,6 +205,7 @@ public class ShipmentResource {
     ) {
         ShipmentDTO created = service.changeStatus(id, request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
+        logger.info("PATCH {}",  uriInfo.getRequestUri());
         return Response.created(location).entity(created).build();
     }
 }

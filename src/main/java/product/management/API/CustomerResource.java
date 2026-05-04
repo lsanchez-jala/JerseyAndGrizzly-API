@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.ICustomerService;
 import product.management.Domain.DTO.Customer.CustomerDTO;
 import product.management.Domain.DTO.Customer.CustomerRequest;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class CustomerResource {
 
     private final ICustomerService service;
+    private Logger logger = LoggerFactory.getLogger(CustomerResource.class);
 
     @Inject
     public CustomerResource(ICustomerService service) {
@@ -46,8 +49,10 @@ public class CustomerResource {
                     )
             }
     )
-    public Response list() {
+    public Response list(@Context UriInfo uriInfo) {
         var result = service.findAll();
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(result).build();
     }
 
@@ -67,8 +72,11 @@ public class CustomerResource {
     )
     public Response get(
             @Parameter(description = "UUID of the customer to retrieve", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(service.findById(id)).build();
     }
 
@@ -88,8 +96,11 @@ public class CustomerResource {
     )
     public Response getByEmail(
             @Parameter(description = "Email address of the customer to retrieve", required = true)
-            @PathParam("email") String email
+            @PathParam("email") String email,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(service.findByEmail(email)).build();
     }
 
@@ -117,6 +128,8 @@ public class CustomerResource {
     ) {
         CustomerDTO created = service.save(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
+        logger.info("POST {}",  uriInfo.getRequestUri());
+        logger.info("Created customer with id {}", created.id());
         return Response.created(location).entity(created).build();
     }
 
@@ -143,8 +156,11 @@ public class CustomerResource {
                     required = true,
                     content = @Content(schema = @Schema(implementation = CustomerRequest.class))
             )
-            CustomerRequest request
+            CustomerRequest request,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("PUT {}", location);
         return Response.ok(service.save(id, request)).build();
     }
 
@@ -160,9 +176,13 @@ public class CustomerResource {
     )
     public Response delete(
             @Parameter(description = "UUID of the customer to delete", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("DELETE {}", location);
         service.delete(id);
+        logger.info("Deleted customer with id {}", id);
         return Response.noContent().build();
     }
 }

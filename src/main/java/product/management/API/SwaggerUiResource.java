@@ -6,10 +6,14 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 
 @Path("/swagger-ui")
 public class SwaggerUiResource {
+    private Logger logger = LoggerFactory.getLogger(SwaggerUiResource.class);
 
     @GET
     @Path("/index.html")

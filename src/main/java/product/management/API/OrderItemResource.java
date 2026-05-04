@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.IOrderItemService;
 import product.management.Domain.DTO.OrderItem.OrderItemDTO;
 import product.management.Domain.DTO.OrderItem.OrderItemRequest;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class OrderItemResource {
 
     private final IOrderItemService service;
+    private Logger logger = LoggerFactory.getLogger(OrderItemResource.class);
 
     @Inject
     public OrderItemResource(IOrderItemService service) {
@@ -45,7 +48,9 @@ public class OrderItemResource {
                     )
             }
     )
-    public Response list() {
+    public Response list(@Context UriInfo uriInfo) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(service.findAll()).build();
     }
 
@@ -65,8 +70,11 @@ public class OrderItemResource {
     )
     public Response get(
             @Parameter(description = "UUID of the order item to retrieve", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(service.findById(id)).build();
     }
 
@@ -86,8 +94,11 @@ public class OrderItemResource {
     )
     public Response listByOrderId(
             @Parameter(description = "UUID of the order to retrieve items for", required = true)
-            @PathParam("orderId") UUID orderId
+            @PathParam("orderId") UUID orderId,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(service.findByOrderId(orderId)).build();
     }
 
@@ -107,8 +118,11 @@ public class OrderItemResource {
     )
     public Response listByProductId(
             @Parameter(description = "UUID of the product to retrieve order items for", required = true)
-            @PathParam("productId") UUID productId
+            @PathParam("productId") UUID productId,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("GET {}", location);
         return Response.ok(service.findByProductId(productId)).build();
     }
 
@@ -136,6 +150,7 @@ public class OrderItemResource {
     ) {
         OrderItemDTO created = service.save(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
+        logger.info("POST {}",  uriInfo.getRequestUri());
         return Response.created(location).entity(created).build();
     }
 
@@ -162,8 +177,11 @@ public class OrderItemResource {
                     required = true,
                     content = @Content(schema = @Schema(implementation = OrderItemRequest.class))
             )
-            OrderItemRequest request
+            OrderItemRequest request,
+            @Context UriInfo uriInfo
     ) {
+        URI location = uriInfo.getRequestUri();
+        logger.info("PUT {}", location);
         return Response.ok(service.save(id, request)).build();
     }
 
@@ -179,9 +197,11 @@ public class OrderItemResource {
     )
     public Response delete(
             @Parameter(description = "UUID of the order item to delete", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
         service.delete(id);
+        logger.info("DELETE {}", uriInfo.getRequestUri());
         return Response.noContent().build();
     }
 
@@ -197,9 +217,11 @@ public class OrderItemResource {
     )
     public Response deleteByOrderId(
             @Parameter(description = "UUID of the order whose items should be deleted", required = true)
-            @PathParam("orderId") UUID orderId
+            @PathParam("orderId") UUID orderId,
+            @Context UriInfo uriInfo
     ) {
         service.deleteByOrderId(orderId);
+        logger.info("DELETE {}", uriInfo.getRequestUri());
         return Response.noContent().build();
     }
 }

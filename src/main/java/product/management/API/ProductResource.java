@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.IProductService;
 import product.management.Domain.DTO.Product.ProductDTO;
 import product.management.Domain.DTO.Product.ProductRequest;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class ProductResource {
 
     private final IProductService service;
+    private Logger logger = LoggerFactory.getLogger(ProductResource.class);
 
     @Inject
     public ProductResource(IProductService service) {
@@ -46,7 +49,8 @@ public class ProductResource {
                     )
             }
     )
-    public Response list() {
+    public Response list(@Context UriInfo uriInfo) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findAll()).build();
     }
 
@@ -66,8 +70,10 @@ public class ProductResource {
     )
     public Response get(
             @Parameter(description = "UUID of the product to retrieve", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findById(id)).build();
     }
 
@@ -93,6 +99,7 @@ public class ProductResource {
             ProductRequest request,
             @Context UriInfo uriInfo
     ) {
+        logger.info("POST {}", uriInfo.getRequestUri());
         ProductDTO created = service.save(request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
         return Response.created(location).entity(created).build();
@@ -121,8 +128,10 @@ public class ProductResource {
                     required = true,
                     content = @Content(schema = @Schema(implementation = ProductRequest.class))
             )
-            ProductRequest request
+            ProductRequest request,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("PATCH {}", uriInfo.getRequestUri());
         return Response.ok(service.save(id, request)).build();
     }
 
@@ -138,9 +147,11 @@ public class ProductResource {
     )
     public Response delete(
             @Parameter(description = "UUID of the product to delete", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
         service.delete(id);
+        logger.info("DELETE {}", uriInfo.getRequestUri());
         return Response.noContent().build();
     }
 }

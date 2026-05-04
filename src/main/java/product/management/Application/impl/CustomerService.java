@@ -2,6 +2,8 @@ package product.management.Application.impl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.ICustomerService;
 import product.management.Application.exception.BadRequestException;
 import product.management.Application.exception.ElementNotFoundException;
@@ -10,6 +12,7 @@ import product.management.Domain.DTO.Customer.CustomerRequest;
 import product.management.Domain.Models.Customer;
 import product.management.Infrastructure.Mappers.CustomerMapper;
 import product.management.Infrastructure.Repositories.ICustomerRepository;
+import product.management.Main;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +23,7 @@ public class CustomerService implements ICustomerService {
 
     private final ICustomerRepository repository;
     private final CustomerMapper mapper;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     @Inject
     public CustomerService(ICustomerRepository repository, CustomerMapper mapper) {
@@ -65,6 +69,7 @@ public class CustomerService implements ICustomerService {
         if (repository.findByEmail(request.email()) != null){
             throw new BadRequestException("Another account found with the same email address: "+request.email());
         }
+        logger.info("Creating new customer with email: {}", request.email());
         return mapper.toDto(repository.save(request));
     }
 

@@ -10,7 +10,10 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.IKafkaProducerService;
+import product.management.Main;
 
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -22,6 +25,7 @@ public class KafkaProducerService implements IKafkaProducerService {
     private final String topic;
     private final String registry;
     private volatile KafkaProducer<String, GenericRecord> producer;
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     @Inject
     public KafkaProducerService(Properties properties) {
@@ -50,11 +54,10 @@ public class KafkaProducerService implements IKafkaProducerService {
                 KafkaProducer<String, GenericRecord> p = new KafkaProducer<>(props);
                 // Force a metadata fetch to confirm connectivity
                 p.partitionsFor(topic);
-                System.out.println("[KafkaProducer] Connected to broker: " + broker);
+                logger.info("KafkaProducer Successfully connected to broker: {}", broker);
                 return p;
             } catch (Exception e) {
-                System.out.printf("[KafkaProducer] Attempt %d/%d — broker not ready (%s). Retrying in 1 s...%n",
-                        i, maxAttempts, e.getMessage());
+                logger.warn("Attempt {}/{} — broker not ready ({}). Retrying in 1 s...", i, maxAttempts, e.getMessage());
                 try { Thread.sleep(1000); } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException("Interrupted while waiting for Kafka", ie);
@@ -84,7 +87,7 @@ public class KafkaProducerService implements IKafkaProducerService {
         try {
             Future<RecordMetadata> future = getProducer().send(record);
             RecordMetadata metadata = future.get();
-            System.out.printf("[KafkaProducer] Sent -> topic=%s partition=%d offset=%d%n",
+            logger.info("KafkaProducer Sent -> topic={} partition={} offset={}",
                     metadata.topic(), metadata.partition(), metadata.offset());
         } catch (Exception e) {
             throw new RuntimeException("Failed to send Kafka message", e);

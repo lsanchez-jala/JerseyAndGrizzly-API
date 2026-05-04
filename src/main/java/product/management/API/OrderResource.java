@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import product.management.Application.IOrderService;
 import product.management.Domain.DTO.Order.OrderDTO;
 import product.management.Domain.DTO.Order.OrderCreateRequest;
@@ -29,6 +31,7 @@ import java.util.UUID;
 public class OrderResource {
 
     private final IOrderService service;
+    private Logger logger = LoggerFactory.getLogger(OrderResource.class);
 
     @Inject
     public OrderResource(IOrderService service) {
@@ -47,7 +50,8 @@ public class OrderResource {
                     )
             }
     )
-    public Response list() {
+    public Response list(@Context UriInfo uriInfo) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findAll()).build();
     }
 
@@ -67,8 +71,10 @@ public class OrderResource {
     )
     public Response get(
             @Parameter(description = "UUID of the order to retrieve", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findById(id)).build();
     }
 
@@ -88,8 +94,10 @@ public class OrderResource {
     )
     public Response listByCustomer(
             @Parameter(description = "UUID of the customer to retrieve orders for", required = true)
-            @PathParam("customerId") UUID customerId
+            @PathParam("customerId") UUID customerId,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findByCustomerId(customerId)).build();
     }
 
@@ -109,8 +117,10 @@ public class OrderResource {
     )
     public Response listByShipment(
             @Parameter(description = "UUID of the shipment to retrieve orders for", required = true)
-            @PathParam("shipmentId") UUID shipmentId
+            @PathParam("shipmentId") UUID shipmentId,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("GET {}", uriInfo.getRequestUri());
         return Response.ok(service.findByShipmentId(shipmentId)).build();
     }
 
@@ -137,6 +147,7 @@ public class OrderResource {
             @Context UriInfo uriInfo
     ) {
         OrderDTO created = service.save(request);
+        logger.info("POST {}", uriInfo.getRequestUri());
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
         return Response.created(location).entity(created).build();
     }
@@ -164,8 +175,10 @@ public class OrderResource {
                     required = true,
                     content = @Content(schema = @Schema(implementation = OrderCreateRequest.class))
             )
-            OrderCreateRequest request
+            OrderCreateRequest request,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("PATCH {}", uriInfo.getRequestUri());
         return Response.ok(service.save(id, request)).build();
     }
 
@@ -181,8 +194,10 @@ public class OrderResource {
     )
     public Response delete(
             @Parameter(description = "UUID of the order to delete", required = true)
-            @PathParam("id") UUID id
+            @PathParam("id") UUID id,
+            @Context UriInfo uriInfo
     ) {
+        logger.info("DELETE {}", uriInfo.getRequestUri());
         service.delete(id);
         return Response.noContent().build();
     }
@@ -213,6 +228,7 @@ public class OrderResource {
             OrderStatusRequest request,
             @Context UriInfo uriInfo
     ) {
+        logger.info("PATCH {}", uriInfo.getRequestUri());
         OrderDTO created = service.changeStatus(id, request);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.id())).build();
         return Response.created(location).entity(created).build();
